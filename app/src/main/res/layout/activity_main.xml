@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="net.atlassianvdopia.MainActivity"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <Button
+        android:onClick="onLoadInterstitialAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="APPODEAL Interstitial AD" />
+
+    <Button
+        android:onClick="onLoadRewardAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="APPODEAL Reward AD" />
+
+</LinearLayout>
