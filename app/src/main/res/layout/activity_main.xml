@@ -20,4 +20,16 @@
         android:layout_height="wrap_content"
         android:text="APPODEAL Reward AD" />
 
+    <Button
+        android:onClick="onLoadInterstitialChocolateAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CHOCOLATE Interstitial AD" />
+
+    <Button
+        android:onClick="onLoadRewardChocolateAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="CHOCOLATE Reward AD" />
+
 </LinearLayout>

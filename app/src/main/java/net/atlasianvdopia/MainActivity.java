@@ -8,10 +8,24 @@ import android.view.View;
 import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.InterstitialCallbacks;
 import com.appodeal.ads.RewardedVideoCallbacks;
+import com.vdopia.ads.lw.Chocolate;
+import com.vdopia.ads.lw.InitCallback;
+import com.vdopia.ads.lw.LVDOAdRequest;
+import com.vdopia.ads.lw.LVDOConstants;
+import com.vdopia.ads.lw.LVDOInterstitialAd;
+import com.vdopia.ads.lw.LVDOInterstitialListener;
+import com.vdopia.ads.lw.LVDORewardedAd;
+import com.vdopia.ads.lw.RewardedAdListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RewardedAdListener, LVDOInterstitialListener {
     
     public static final String TAG = "KevinAppodeal";
+
+    private final static String CHOCOLATE_APP_KEY = "XqjhRR";
+
+    LVDOAdRequest adRequest = new LVDOAdRequest(this);
+    LVDOInterstitialAd interstitialAd;
+    LVDORewardedAd rewardedAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
         String appoDealKey = "ccbd57eeec72f3baa5a081bc26d8e1ad9b7bbac0f1a4c273";
         Appodeal.disableLocationPermissionCheck();
         Appodeal.initialize(this, appoDealKey, Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.MREC);
+        Chocolate.init(this, CHOCOLATE_APP_KEY, new InitCallback() {
+            @Override
+            public void onSuccess() {
+                Log.d(TAG,"Chocolate.init success");
+                LVDORewardedAd.prefetch(MainActivity.this, CHOCOLATE_APP_KEY, adRequest);
+            }
+
+            @Override
+            public void onError(String s) {
+                Log.d(TAG,"Chocolate.init error: "+s);
+            }
+        });
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -68,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "onRewardedVideoClosed");
             }
         });
+
+        interstitialAd = new LVDOInterstitialAd(this, CHOCOLATE_APP_KEY, this);
+        rewardedAd = new LVDORewardedAd(this, CHOCOLATE_APP_KEY, this);
         
     }
 
@@ -77,5 +106,78 @@ public class MainActivity extends AppCompatActivity {
 
     public void onLoadRewardAd(View view) {
         Appodeal.show(this, Appodeal.REWARDED_VIDEO);
+    }
+
+    public void onLoadInterstitialChocolateAd(View view) {
+        interstitialAd.loadAd(adRequest);
+    }
+
+    public void onLoadRewardChocolateAd(View view) {
+        rewardedAd.loadAd(adRequest);
+    }
+
+    @Override
+    public void onRewardedVideoLoaded(LVDORewardedAd lvdoRewardedAd) {
+        Log.d(TAG, "onRewardedVideoLoaded");
+        try {
+            lvdoRewardedAd.showRewardAd("secret234", "myUserId", "coins", "4.00");
+        }catch (Exception e) {
+            Log.e(TAG, "onRewardedVideoLoaded");
+        }
+    }
+
+    @Override
+    public void onRewardedVideoFailed(LVDORewardedAd lvdoRewardedAd, LVDOConstants.LVDOErrorCode lvdoErrorCode) {
+        Log.d(TAG, "onRewardedVideoFailed");
+    }
+
+    @Override
+    public void onRewardedVideoShown(LVDORewardedAd lvdoRewardedAd) {
+        Log.d(TAG, "onRewardedVideoShown");
+    }
+
+    @Override
+    public void onRewardedVideoShownError(LVDORewardedAd lvdoRewardedAd, LVDOConstants.LVDOErrorCode lvdoErrorCode) {
+        Log.d(TAG, "onRewardedVideoShownError");
+    }
+
+    @Override
+    public void onRewardedVideoDismissed(LVDORewardedAd lvdoRewardedAd) {
+        Log.d(TAG, "onRewardedVideoFinished");
+    }
+
+    @Override
+    public void onRewardedVideoCompleted(LVDORewardedAd lvdoRewardedAd) {
+        Log.d(TAG, "onRewardedVideoCompleted");
+    }
+
+    @Override
+    public void onInterstitialLoaded(LVDOInterstitialAd lvdoInterstitialAd) {
+        Log.d(TAG, "onInterstitialLoaded");
+        try {
+            interstitialAd.show();
+        }catch (Exception e) {
+            Log.e(TAG, "onInterstitialLoaded: "+e);
+        }
+    }
+
+    @Override
+    public void onInterstitialFailed(LVDOInterstitialAd lvdoInterstitialAd, LVDOConstants.LVDOErrorCode lvdoErrorCode) {
+        Log.d(TAG, "onInterstitialFailed");
+    }
+
+    @Override
+    public void onInterstitialShown(LVDOInterstitialAd lvdoInterstitialAd) {
+        Log.d(TAG, "onInterstitialShown");
+    }
+
+    @Override
+    public void onInterstitialClicked(LVDOInterstitialAd lvdoInterstitialAd) {
+        Log.d(TAG, "onInterstitialClicked");
+    }
+
+    @Override
+    public void onInterstitialDismissed(LVDOInterstitialAd lvdoInterstitialAd) {
+        Log.d(TAG, "onInterstitialDismissed");
     }
 }
