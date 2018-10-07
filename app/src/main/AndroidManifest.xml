@@ -279,7 +279,16 @@
             android:grantUriPermissions="true"
             android:exported="false" />
 
-
+        <!-- Baidu -->
+        <meta-data
+            android:name="app_license"
+            android:value="3093a807a6d4738e5c2fe812d26d657d"/>
+        <provider
+            android:name="com.duapps.ad.stats.DuAdCacheProvider"
+            android:authorities="${applicationId}.DuAdCacheProvider"
+            android:exported="false">
+        </provider>
+        <!-- End Baidu -->
 
     </application>
 
