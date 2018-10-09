@@ -245,7 +245,7 @@
             </intent-filter>
         </receiver>
 
-        <meta-data android:name="presage_key" android:value="000000"/>
+        <meta-data android:name="presage_key" android:value="271370"/>
         <service android:name="io.presage.PresageService" android:enabled="true" android:exported="true" android:process=":remote">
             <intent-filter>
                 <action android:name="io.presage.PresageService.PIVOT" />

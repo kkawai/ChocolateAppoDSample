@@ -76,10 +76,10 @@ dependencies {
     implementation("com.vdopia.ads.lw:google-adapter-980:1.0.0") //WORKS
 //    implementation("com.vdopia.ads.lw:inmobi-adapter:1.0.9")  //need to downgrade and change init
 //    implementation("com.vdopia.ads.lw:mopub-adapter:1.0.9")  //needs work
-//    implementation("com.vdopia.ads.lw:ogury-adapter:1.0.6")  //conflicts, needs work
+    implementation("com.vdopia.ads.lw:ogury-adapter-2-1-15:1.0.4")  //WORKS; interstitial only
     implementation("com.vdopia.ads.lw:youappi-adapter:1.0.8")  //WORKS
 //    implementation("com.vdopia.ads.lw:tapjoy-adapter:1.0.6")  //needs work
-//    implementation("com.vdopia.ads.lw:unity-adapter:1.1.0") //need to create another excluding com.unity3d.ads.IUnityAdsListener
+    implementation("com.vdopia.ads.lw:unity-adapter-no-classes:1.0.0") //WORKS
     implementation("com.vdopia.ads.lw:vungle-adapter-510:1.0.8") //WORKS
 
 //    implementation 'com.github.vungle:vungle-android-sdk:5.1.0'
