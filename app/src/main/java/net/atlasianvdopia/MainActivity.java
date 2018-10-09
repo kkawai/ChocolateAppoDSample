@@ -1,10 +1,10 @@
 package net.atlassianvdopia;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.InterstitialCallbacks;
@@ -18,6 +18,7 @@ import com.vdopia.ads.lw.LVDOInterstitialAd;
 import com.vdopia.ads.lw.LVDOInterstitialListener;
 import com.vdopia.ads.lw.LVDORewardedAd;
 import com.vdopia.ads.lw.RewardedAdListener;
+import com.vdopia.ads.lw.VdopiaLogger;
 
 public class MainActivity extends AppCompatActivity implements RewardedAdListener, LVDOInterstitialListener {
 
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        VdopiaLogger.enable(true);
+        adRequest.addPartnerName(LVDOConstants.PARTNER.VUNGLE);
         String appoDealKey = "ccbd57eeec72f3baa5a081bc26d8e1ad9b7bbac0f1a4c273";
         Appodeal.disableLocationPermissionCheck();
         Appodeal.initialize(this, appoDealKey, Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.MREC);
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
                 try {
                     AdvertisingIdClient.Info info = AdvertisingIdClient.getAdvertisingIdInfo(view.getContext());
                     Log.d(TAG, "AdvertisingIdClient.getAdvertisingIdInfo. isLimitAdTrackingEnabled: " + info.isLimitAdTrackingEnabled());
-                    toast("isLimitAdTrackingEnabled: " + info.isLimitAdTrackingEnabled() + " id: " + info.getId());
+                    toast("isLimitAdTrackingEnabled: " + info.isLimitAdTrackingEnabled() + "\nAd Id: " + info.getId());
                 } catch (Throwable t) {
                     Log.e(TAG, "AdvertisingIdClient.getAdvertisingIdInfo failed: " + t);
                     toast("failed to get ad info: " + t);
@@ -132,7 +135,8 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Toast.makeText(MainActivity.this, string, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, string, Toast.LENGTH_SHORT).show();
+                new AlertDialog.Builder(MainActivity.this).setMessage(string).show();
             }
         });
     }
