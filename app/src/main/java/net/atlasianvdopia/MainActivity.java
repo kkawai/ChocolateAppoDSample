@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     protected void onCreate(Bundle savedInstanceState) {
 
         VdopiaLogger.enable(true);
-        adRequest.addPartnerName(LVDOConstants.PARTNER.VUNGLE);
+        adRequest.addPartnerName(LVDOConstants.PARTNER.APPLOVIN);
         String appoDealKey = "ccbd57eeec72f3baa5a081bc26d8e1ad9b7bbac0f1a4c273";
         Appodeal.disableLocationPermissionCheck();
         Appodeal.initialize(this, appoDealKey, Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.MREC);
