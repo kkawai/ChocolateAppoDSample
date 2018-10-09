@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.appodeal.ads.Appodeal;
 import com.appodeal.ads.InterstitialCallbacks;
 import com.appodeal.ads.RewardedVideoCallbacks;
+import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.vdopia.ads.lw.Chocolate;
 import com.vdopia.ads.lw.InitCallback;
 import com.vdopia.ads.lw.LVDOAdRequest;
@@ -18,7 +20,7 @@ import com.vdopia.ads.lw.LVDORewardedAd;
 import com.vdopia.ads.lw.RewardedAdListener;
 
 public class MainActivity extends AppCompatActivity implements RewardedAdListener, LVDOInterstitialListener {
-    
+
     public static final String TAG = "KevinAppodeal";
 
     private final static String CHOCOLATE_APP_KEY = "XqjhRR";
@@ -36,13 +38,13 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
         Chocolate.init(this, CHOCOLATE_APP_KEY, new InitCallback() {
             @Override
             public void onSuccess() {
-                Log.d(TAG,"Chocolate.init success");
+                Log.d(TAG, "Chocolate.init success");
                 LVDORewardedAd.prefetch(MainActivity.this, CHOCOLATE_APP_KEY, adRequest);
             }
 
             @Override
             public void onError(String s) {
-                Log.d(TAG,"Chocolate.init error: "+s);
+                Log.d(TAG, "Chocolate.init error: " + s);
             }
         });
 
@@ -54,18 +56,22 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
             public void onInterstitialLoaded(boolean isPrecache) {
                 Log.d(TAG, "onInterstitialLoaded");
             }
+
             @Override
             public void onInterstitialFailedToLoad() {
                 Log.d(TAG, "onInterstitialFailedToLoad");
             }
+
             @Override
             public void onInterstitialShown() {
                 Log.d(TAG, "onInterstitialShown");
             }
+
             @Override
             public void onInterstitialClicked() {
                 Log.d(TAG, "onInterstitialClicked");
             }
+
             @Override
             public void onInterstitialClosed() {
                 Log.d(TAG, "onInterstitialClosed");
@@ -77,18 +83,22 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
             public void onRewardedVideoLoaded() {
                 Log.d(TAG, "onRewardedVideoLoaded");
             }
+
             @Override
             public void onRewardedVideoFailedToLoad() {
                 Log.d(TAG, "onRewardedVideoFailedToLoad");
             }
+
             @Override
             public void onRewardedVideoShown() {
                 Log.d(TAG, "onRewardedVideoShown");
             }
+
             @Override
             public void onRewardedVideoFinished(int amount, String name) {
                 Log.d(TAG, "onRewardedVideoFinished");
             }
+
             @Override
             public void onRewardedVideoClosed(boolean finished) {
                 Log.d(TAG, "onRewardedVideoClosed");
@@ -97,7 +107,34 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
 
         interstitialAd = new LVDOInterstitialAd(this, CHOCOLATE_APP_KEY, this);
         rewardedAd = new LVDORewardedAd(this, CHOCOLATE_APP_KEY, this);
-        
+
+    }
+
+    public void onCheckOptInSettings(final View view) {
+
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    AdvertisingIdClient.Info info = AdvertisingIdClient.getAdvertisingIdInfo(view.getContext());
+                    Log.d(TAG, "AdvertisingIdClient.getAdvertisingIdInfo. isLimitAdTrackingEnabled: " + info.isLimitAdTrackingEnabled());
+                    toast("isLimitAdTrackingEnabled: " + info.isLimitAdTrackingEnabled() + " id: " + info.getId());
+                } catch (Throwable t) {
+                    Log.e(TAG, "AdvertisingIdClient.getAdvertisingIdInfo failed: " + t);
+                    toast("failed to get ad info: " + t);
+                }
+
+            }
+        }.start();
+    }
+
+    private void toast(final String string) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, string, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void onLoadInterstitialAd(View view) {
@@ -121,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
         Log.d(TAG, "onRewardedVideoLoaded");
         try {
             lvdoRewardedAd.showRewardAd("secret234", "myUserId", "coins", "4.00");
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e(TAG, "onRewardedVideoLoaded");
         }
     }
@@ -156,8 +193,8 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
         Log.d(TAG, "onInterstitialLoaded");
         try {
             interstitialAd.show();
-        }catch (Exception e) {
-            Log.e(TAG, "onInterstitialLoaded: "+e);
+        } catch (Exception e) {
+            Log.e(TAG, "onInterstitialLoaded: " + e);
         }
     }
 
@@ -180,4 +217,5 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     public void onInterstitialDismissed(LVDOInterstitialAd lvdoInterstitialAd) {
         Log.d(TAG, "onInterstitialDismissed");
     }
+
 }
