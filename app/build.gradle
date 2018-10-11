@@ -69,12 +69,12 @@ dependencies {
 
     //chocolate stuff
     implementation("com.vdopia.ads.lw:coresdk:2.5.8")
-//    implementation("com.vdopia.ads.lw:adcolony-adapter:1.0.8")  //********  they use 3.2.1
+    implementation("com.vdopia.ads.lw:adcolony-adapter-321:1.0.3")  //WORKS
     implementation("com.vdopia.ads.lw:applovin-adapter:1.1.0") //WORKS
     implementation("com.vdopia.ads.lw:baidu-adapter:1.0.7")  //WORKS
     implementation("com.vdopia.ads.lw:facebook-adapter:1.0.6") //WORKS
     implementation("com.vdopia.ads.lw:google-adapter-980:1.0.0") //WORKS
-//    implementation("com.vdopia.ads.lw:inmobi-adapter:1.0.9")  //********** they use 6.2.3
+    implementation("com.vdopia.ads.lw:inmobi-adapter-623:1.0.1")  //WORKS; had to remove native inview
     implementation("com.vdopia.ads.lw:mopub-adapter-415:1.0.2")  //WORKS
     implementation("com.vdopia.ads.lw:ogury-adapter-2-1-15:1.0.4")  //WORKS; interstitial only
     implementation("com.vdopia.ads.lw:youappi-adapter:1.0.8")  //WORKS
