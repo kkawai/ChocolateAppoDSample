@@ -32,4 +32,10 @@
         android:layout_height="wrap_content"
         android:text="CHOCOLATE Reward AD" />
 
+    <Button
+        android:onClick="onCheckOptInSettings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Check Google Ads Opt In" />
+
 </LinearLayout>
