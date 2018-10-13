@@ -33,6 +33,18 @@
         android:text="CHOCOLATE Reward AD" />
 
     <Button
+        android:onClick="onLoadM2InterstitialChocFirst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="M2 Chocolate First" />
+
+    <Button
+        android:onClick="onLoadM2InterstitialAppodealFirst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="M2 Appodeal First" />
+
+    <Button
         android:onClick="onCheckOptInSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

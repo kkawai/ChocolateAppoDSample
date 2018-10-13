@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
                 public void onError(String s) {
                     Log.d(TAG, "Chocolate.init error: " + s);
                 }
+
+                @Override
+                public void onAlreadyInitialized() {
+                    Log.d(TAG, "Chocolate.init already initialized");
+                }
             });
         } else {
             Log.d(TAG, "Chocolate is already initialized");
@@ -157,18 +162,32 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     }
 
     public void onLoadInterstitialAd(View view) {
-        Appodeal.show(this, Appodeal.INTERSTITIAL);
+        clearM2();
+        if (Appodeal.isLoaded(Appodeal.INTERSTITIAL) && Appodeal.canShow(Appodeal.INTERSTITIAL)) {
+            Log.d(TAG, "appodeal is loaded and can show Interstitial");
+            Appodeal.show(this, Appodeal.INTERSTITIAL);
+        } else {
+            Log.d(TAG, "appodeal is not loaded and cannot show Interstitial");
+        }
     }
 
     public void onLoadRewardAd(View view) {
-        Appodeal.show(this, Appodeal.REWARDED_VIDEO);
+        clearM2();
+        if (Appodeal.isLoaded(Appodeal.REWARDED_VIDEO) && Appodeal.canShow(Appodeal.REWARDED_VIDEO)) {
+            Log.d(TAG, "appodeal is loaded and can show Rewarded");
+            Appodeal.show(this, Appodeal.REWARDED_VIDEO);
+        } else {
+            Log.d(TAG, "appodeal is not loaded and cannot show Rewarded");
+        }
     }
 
     public void onLoadInterstitialChocolateAd(View view) {
+        clearM2();
         interstitialAd.loadAd(adRequest);
     }
 
     public void onLoadRewardChocolateAd(View view) {
+        clearM2();
         rewardedAd.loadAd(adRequest);
     }
 
@@ -241,6 +260,22 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
         Log.d(TAG, "chocolate onInterstitialDismissed");
         toast("Chocolate Dismissed: " + lvdoInterstitialAd.getWinningPartnerName());
         LVDOInterstitialAd.prefetch(MainActivity.this, CHOCOLATE_APP_KEY, adRequest);
+    }
+
+    public void onLoadM2InterstitialChocFirst(View view) {
+        adRequest.setSecondaryMediationApiKey(APPODEAL_APP_KEY);
+        adRequest.setSecondaryMediationRunOrder(LVDOAdRequest.SecondaryMediationRunOrder.CHOCOLATE_MEDIATION_RUN_FIRST);
+        interstitialAd.loadAd(adRequest);
+    }
+
+    public void onLoadM2InterstitialAppodealFirst(View view) {
+        adRequest.setSecondaryMediationApiKey(APPODEAL_APP_KEY);
+        adRequest.setSecondaryMediationRunOrder(LVDOAdRequest.SecondaryMediationRunOrder.SECONDARY_MEDIATION_RUN_FIRST);
+        interstitialAd.loadAd(adRequest);
+    }
+
+    private void clearM2() {
+        adRequest.setSecondaryMediationApiKey(null);
     }
 
 }
