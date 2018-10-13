@@ -1,9 +1,10 @@
-package net.atlassianvdopia;
+package com.chocolate.m2.demo;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     public static final String TAG = "KevinAppodeal";
 
     private final static String CHOCOLATE_APP_KEY = "XqjhRR";
-    private final static String APPODEAL_APP_KEY = "ccbd57eeec72f3baa5a081bc26d8e1ad9b7bbac0f1a4c273";
+    private final static String APPODEAL_APP_KEY = "543259f795c32f48f68f8bcc0c527ed5569c643b83e76a0f";
 
     private LVDOAdRequest adRequest = new LVDOAdRequest(this);
     private LVDOInterstitialAd interstitialAd;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
 
         VdopiaLogger.enable(true);
         Appodeal.disableLocationPermissionCheck();
-        Appodeal.initialize(this, APPODEAL_APP_KEY, Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.MREC);
+        Appodeal.initialize(this, APPODEAL_APP_KEY, Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO);
         if (!Chocolate.isInitialized(this)) {
             Chocolate.init(this, CHOCOLATE_APP_KEY, new InitCallback() {
                 @Override
@@ -233,11 +234,11 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     }
 
     private String getWinner(LVDORewardedAd lvdoRewardedAd) {
-        return lvdoRewardedAd.getWinningPartnerName() == null ? "AppoDeal" : lvdoRewardedAd.getWinningPartnerName();
+        return TextUtils.isEmpty(lvdoRewardedAd.getWinningPartnerName()) ? "AppoDeal" : lvdoRewardedAd.getWinningPartnerName();
     }
 
     private String getWinner(LVDOInterstitialAd lvdoInterstitialAd) {
-        return lvdoInterstitialAd.getWinningPartnerName() == null ? "AppoDeal" : lvdoInterstitialAd.getWinningPartnerName();
+        return TextUtils.isEmpty(lvdoInterstitialAd.getWinningPartnerName()) ? "AppoDeal" : lvdoInterstitialAd.getWinningPartnerName();
     }
 
 
