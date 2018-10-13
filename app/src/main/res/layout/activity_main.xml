@@ -9,6 +9,12 @@
     android:gravity="center">
 
     <Button
+        android:onClick="choosePartners"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Partners" />
+
+    <Button
         android:onClick="onLoadInterstitialAd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,13 +42,25 @@
         android:onClick="onLoadM2InterstitialChocFirst"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="M2 Chocolate First" />
+        android:text="M2 Chocolate Interstitial First" />
 
     <Button
         android:onClick="onLoadM2InterstitialAppodealFirst"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="M2 Appodeal First" />
+        android:text="M2 Appodeal Interstitial First" />
+
+    <Button
+        android:onClick="onLoadM2RewardedChocFirst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="M2 Chocolate Rewarded First" />
+
+    <Button
+        android:onClick="onLoadM2RewardedAppodealFirst"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="M2 Appodeal Rewarded First" />
 
     <Button
         android:onClick="onCheckOptInSettings"

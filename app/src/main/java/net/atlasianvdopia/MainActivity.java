@@ -1,5 +1,6 @@
 package net.atlassianvdopia;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.appodeal.ads.InterstitialCallbacks;
 import com.appodeal.ads.RewardedVideoCallbacks;
 import com.google.android.gms.ads.identifier.AdvertisingIdClient;
 import com.vdopia.ads.lw.Chocolate;
+import com.vdopia.ads.lw.ChocolateAdException;
 import com.vdopia.ads.lw.InitCallback;
 import com.vdopia.ads.lw.LVDOAdRequest;
 import com.vdopia.ads.lw.LVDOConstants;
@@ -20,6 +22,9 @@ import com.vdopia.ads.lw.LVDOInterstitialListener;
 import com.vdopia.ads.lw.LVDORewardedAd;
 import com.vdopia.ads.lw.RewardedAdListener;
 import com.vdopia.ads.lw.VdopiaLogger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RewardedAdListener, LVDOInterstitialListener {
 
@@ -36,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     protected void onCreate(Bundle savedInstanceState) {
 
         VdopiaLogger.enable(true);
-        adRequest.addPartnerName(LVDOConstants.PARTNER.ALL);
         Appodeal.disableLocationPermissionCheck();
         Appodeal.initialize(this, APPODEAL_APP_KEY, Appodeal.INTERSTITIAL | Appodeal.REWARDED_VIDEO | Appodeal.MREC);
         if (!Chocolate.isInitialized(this)) {
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
                 @Override
                 public void onSuccess() {
                     Log.d(TAG, "Chocolate.init success");
+                    setPartners(adRequest);
                     LVDORewardedAd.prefetch(MainActivity.this, CHOCOLATE_APP_KEY, adRequest);
                 }
 
@@ -183,11 +188,13 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
 
     public void onLoadInterstitialChocolateAd(View view) {
         clearM2();
+        setPartners(adRequest);
         interstitialAd.loadAd(adRequest);
     }
 
     public void onLoadRewardChocolateAd(View view) {
         clearM2();
+        setPartners(adRequest);
         rewardedAd.loadAd(adRequest);
     }
 
@@ -195,8 +202,8 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     public void onRewardedVideoLoaded(LVDORewardedAd lvdoRewardedAd) {
         Log.d(TAG, "chocolate onRewardedVideoLoaded");
         try {
-            lvdoRewardedAd.showRewardAd("secret234", "myUserId", "coins", "4.00");
-        } catch (Exception e) {
+            this.rewardedAd.showRewardAd("secret234", "myUserId", "coins", "4.00");
+        } catch (ChocolateAdException e) {
             Log.e(TAG, "chocolate  onRewardedVideoLoaded: "+e);
         }
     }
@@ -219,10 +226,20 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
 
     @Override
     public void onRewardedVideoDismissed(LVDORewardedAd lvdoRewardedAd) {
-        Log.d(TAG, "chocolate onRewardedVideoFinished: "+lvdoRewardedAd.getWinningPartnerName());
-        toast("Chocolate Dismissed: " + lvdoRewardedAd.getWinningPartnerName());
+        Log.d(TAG, "chocolate onRewardedVideoFinished: "+getWinner(lvdoRewardedAd));
+        toast("Chocolate Dismissed: " + getWinner(lvdoRewardedAd));
+        setPartners(adRequest);
         LVDORewardedAd.prefetch(MainActivity.this, CHOCOLATE_APP_KEY, adRequest);
     }
+
+    private String getWinner(LVDORewardedAd lvdoRewardedAd) {
+        return lvdoRewardedAd.getWinningPartnerName() == null ? "AppoDeal" : lvdoRewardedAd.getWinningPartnerName();
+    }
+
+    private String getWinner(LVDOInterstitialAd lvdoInterstitialAd) {
+        return lvdoInterstitialAd.getWinningPartnerName() == null ? "AppoDeal" : lvdoInterstitialAd.getWinningPartnerName();
+    }
+
 
     @Override
     public void onRewardedVideoCompleted(LVDORewardedAd lvdoRewardedAd) {
@@ -233,8 +250,8 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     public void onInterstitialLoaded(LVDOInterstitialAd lvdoInterstitialAd) {
         Log.d(TAG, "chocolate onInterstitialLoaded");
         try {
-            interstitialAd.show();
-        } catch (Exception e) {
+            this.interstitialAd.show();
+        } catch (ChocolateAdException e) {
             Log.e(TAG, "chocolate onInterstitialLoaded: " + e);
         }
     }
@@ -258,24 +275,92 @@ public class MainActivity extends AppCompatActivity implements RewardedAdListene
     @Override
     public void onInterstitialDismissed(LVDOInterstitialAd lvdoInterstitialAd) {
         Log.d(TAG, "chocolate onInterstitialDismissed");
-        toast("Chocolate Dismissed: " + lvdoInterstitialAd.getWinningPartnerName());
+        toast("Chocolate Dismissed: " + getWinner(lvdoInterstitialAd));
+        setPartners(adRequest);
         LVDOInterstitialAd.prefetch(MainActivity.this, CHOCOLATE_APP_KEY, adRequest);
     }
 
     public void onLoadM2InterstitialChocFirst(View view) {
+        setPartners(adRequest);
         adRequest.setSecondaryMediationApiKey(APPODEAL_APP_KEY);
         adRequest.setSecondaryMediationRunOrder(LVDOAdRequest.SecondaryMediationRunOrder.CHOCOLATE_MEDIATION_RUN_FIRST);
         interstitialAd.loadAd(adRequest);
     }
 
     public void onLoadM2InterstitialAppodealFirst(View view) {
+        setPartners(adRequest);
         adRequest.setSecondaryMediationApiKey(APPODEAL_APP_KEY);
         adRequest.setSecondaryMediationRunOrder(LVDOAdRequest.SecondaryMediationRunOrder.SECONDARY_MEDIATION_RUN_FIRST);
         interstitialAd.loadAd(adRequest);
     }
 
+    public void onLoadM2RewardedChocFirst(View view) {
+        setPartners(adRequest);
+        adRequest.setSecondaryMediationApiKey(APPODEAL_APP_KEY);
+        adRequest.setSecondaryMediationRunOrder(LVDOAdRequest.SecondaryMediationRunOrder.CHOCOLATE_MEDIATION_RUN_FIRST);
+        rewardedAd.loadAd(adRequest);
+    }
+
+    public void onLoadM2RewardedAppodealFirst(View view) {
+        setPartners(adRequest);
+        adRequest.setSecondaryMediationApiKey(APPODEAL_APP_KEY);
+        adRequest.setSecondaryMediationRunOrder(LVDOAdRequest.SecondaryMediationRunOrder.SECONDARY_MEDIATION_RUN_FIRST);
+        rewardedAd.loadAd(adRequest);
+    }
+
     private void clearM2() {
         adRequest.setSecondaryMediationApiKey(null);
+    }
+
+    static String[] partners = new String[13];
+    static {
+        partners[0] = LVDOConstants.PARTNER.ADCOLONY.name();
+        partners[1] = LVDOConstants.PARTNER.APPLOVIN.name();
+        partners[2] = LVDOConstants.PARTNER.BAIDU.name();
+        partners[3] = LVDOConstants.PARTNER.CHOCOLATE.name();
+        partners[4] = LVDOConstants.PARTNER.FACEBOOK.name();
+        partners[5] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
+        partners[6] = LVDOConstants.PARTNER.INMOBI.name();
+        partners[7] = LVDOConstants.PARTNER.MOPUB.name();
+        partners[8] = LVDOConstants.PARTNER.OGURY.name();
+        partners[9] = LVDOConstants.PARTNER.TAPJOY.name();
+        partners[10] = LVDOConstants.PARTNER.UNITY.name();
+        partners[11] = LVDOConstants.PARTNER.VUNGLE.name();
+        partners[12] = LVDOConstants.PARTNER.YOUAPPI.name();
+    }
+
+    static boolean[] selected = new boolean[13];
+    static {
+        for (int i=0;i<13;i++) {
+            selected[i]=true;
+        }
+    }
+
+    private List<LVDOConstants.PARTNER> setPartners(LVDOAdRequest adRequest) {
+        List<LVDOConstants.PARTNER> list = new ArrayList<>(13);
+        for (int i=0;i<13;i++) {
+            if (selected[i]) {
+                list.add(LVDOConstants.PARTNER.valueOf(partners[i]));
+            }
+        }
+        adRequest.setPartnerNames(list);
+        return list;
+    }
+
+    public void choosePartners(View view) {
+        //w/out the listener, even though it does nothing, things don't work so well
+        //so we need to pass a listener
+        new AlertDialog.Builder(this).setMultiChoiceItems(partners, selected, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+
+            }
+        }).setPositiveButton("DONE", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).show();
     }
 
 }
